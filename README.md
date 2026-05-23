@@ -36,18 +36,41 @@ brew install lucasgelfond/zerobrew/zerobrew
 
 ## Quick start
 
+### Install
+
+```bash
+curl -fsSL https://zerobrew.rs/install | bash
+```
+
+After install, run the `export` command it prints (or restart your terminal).
+
+### Use zerobrew
+
 ```bash
 zb install jq                   # install one package
-zb install wget git             # install multiple
-zb bundle                       # install from Brewfile
-zb bundle install -f myfile     # install from custom file
+zb install wget git             # install multiple packages at once
+zb bundle                       # install from Brewfile in current dir
+zb bundle install -f myfile     # install from a custom Brewfile
 zb bundle dump                  # export installed packages to Brewfile
-zb bundle dump -f out --force   # dump to custom file (overwrite)
+zb bundle dump -f out --force   # dump to custom file (overwrites)
 zb uninstall jq                 # uninstall one package
-zb reset                        # uninstall everything
+zb reset                        # uninstall everything managed by zerobrew
 zb gc                           # garbage collect unused store entries
-zbx jq --version                # run without linking
+zbx jq --version                # run a package without linking it permanently
 ```
+
+### Compare to Homebrew
+
+| Command | Homebrew | zerobrew |
+|---------|----------|----------|
+| Install | `brew install jq` | `zb install jq` |
+| Uninstall | `brew uninstall jq` | `zb uninstall jq` |
+| List installed | `brew list` | `zb list` |
+| Update | `brew update` | `zb update` |
+
+### How it works
+
+zerobrew is a performance-optimized Homebrew client. It uses the same formula definitions from homebrew-core but stores packages in a content-addressable store with APFS clonefile support on macOS, providing 2-30x faster installs for many packages.
 
 ## Performance snapshot
 
