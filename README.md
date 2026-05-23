@@ -34,6 +34,27 @@ Or via Homebrew:
 brew install lucasgelfond/zerobrew/zerobrew
 ```
 
+## Additional Installation Methods
+
+### From source
+
+```bash
+git clone https://github.com/lucasgelfond/zerobrew.git
+cd zerobrew
+cargo build --release
+./target/release/zb install jq  # test it works
+```
+
+### Pre-built binary
+
+Download the latest release for your platform from [the releases page](https://github.com/lucasgelfond/zerobrew/releases) and place the `zb` binary in your `PATH`.
+
+### npm (Node.js required)
+
+```bash
+npm install -g @lucasgelfond/zerobrew
+```
+
 ## Quick start
 
 ```bash
