@@ -114,3 +114,6 @@ doing so.
 - **Status:** Experimental, but already useful for many common Homebrew formulas.
 - **Feedback:** If you hit incompatibilities, please open an issue or PR.
 - **License:** Dual-licensed under [Apache 2.0](./LICENSE-APACHE.md) OR [MIT](./LICENSE-MIT.md), at your choice.
+
+## Contributing
+PRs welcome!
