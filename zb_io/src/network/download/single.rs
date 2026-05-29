@@ -56,7 +56,7 @@ pub struct Downloader {
     pub(crate) blob_cache: BlobCache,
     pub(crate) token_cache: TokenCache,
     pub(crate) global_semaphore: Option<Arc<Semaphore>>,
-    tls_config: Option<Arc<rustls::ClientConfig>>,
+    tls_config: Arc<rustls::ClientConfig>,
 }
 
 impl Downloader {
@@ -67,12 +67,9 @@ impl Downloader {
     pub fn with_semaphore(blob_cache: BlobCache, semaphore: Option<Arc<Semaphore>>) -> Self {
         let tls_config = shared_tls_config();
 
-        let mut builder = reqwest::Client::builder().user_agent("zerobrew/0.1");
-        if let Some(tls_config) = &tls_config {
-            builder = builder.use_preconfigured_tls(tls_config.clone());
-        }
-
-        let client = builder
+        let client = reqwest::Client::builder()
+            .user_agent("zerobrew/0.1")
+            .use_preconfigured_tls(tls_config.clone())
             .pool_max_idle_per_host(10)
             .tcp_nodelay(true)
             .tcp_keepalive(Duration::from_secs(60))
@@ -94,12 +91,9 @@ impl Downloader {
     }
 
     fn create_isolated_client(&self) -> reqwest::Client {
-        let mut builder = reqwest::Client::builder().user_agent("zerobrew/0.1");
-        if let Some(tls_config) = &self.tls_config {
-            builder = builder.use_preconfigured_tls(tls_config.clone());
-        }
-
-        builder
+        reqwest::Client::builder()
+            .user_agent("zerobrew/0.1")
+            .use_preconfigured_tls(self.tls_config.clone())
             .pool_max_idle_per_host(0)
             .tcp_nodelay(true)
             .tcp_keepalive(Duration::from_secs(60))
@@ -400,7 +394,7 @@ pub(crate) async fn download_response_internal(
         }
     }
 
-    let actual_hash = format!("{:x}", hasher.finalize());
+    let actual_hash = crate::checksum::sha256_hex(hasher);
 
     if actual_hash != expected_sha256 {
         return Err(Error::ChecksumMismatch {
@@ -429,11 +423,6 @@ mod tests {
     use tempfile::TempDir;
     use wiremock::matchers::{method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
-
-    #[test]
-    fn build_rustls_config_does_not_panic() {
-        let _ = crate::network::tls::build_rustls_config();
-    }
 
     #[tokio::test]
     async fn valid_checksum_passes() {

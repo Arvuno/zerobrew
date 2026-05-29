@@ -371,7 +371,7 @@ pub(crate) async fn download_with_chunks(
         });
     }
 
-    let actual_hash = format!("{:x}", hasher.finalize());
+    let actual_hash = crate::checksum::sha256_hex(hasher);
 
     if actual_hash != ctx.expected_sha256 {
         return Err(Error::ChecksumMismatch {
