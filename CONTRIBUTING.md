@@ -140,3 +140,6 @@ sudo chown -R "$(whoami)" "$(brew --prefix)"
 ## Questions?
 
 For further questions, open an issue on GitHub.
+
+## Contributors
+- Documentation improvements (2026)
