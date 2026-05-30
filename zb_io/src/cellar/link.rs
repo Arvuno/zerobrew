@@ -733,10 +733,11 @@ mod tests {
 
     #[test]
     fn two_python_virtualenv_kegs_with_shared_dep_names_install_without_conflict() {
-        // Regression for #377: installing two Python CLI apps (mycli, pgcli)
-        // failed because shared transitive deps (sqlformat, pygmentize) live in
-        // each keg's libexec/bin/ and previously got merged into the shared
-        // prefix/libexec/bin/, colliding on the second install.
+        // Regression test for #377 (https://github.com/lucasgelfond/zerobrew/issues/377):
+        // installing two Python CLI apps (mycli, pgcli) failed because shared
+        // transitive deps (sqlformat, pygmentize) live in each keg's libexec/bin/
+        // and previously got merged into the shared prefix/libexec/bin/, colliding
+        // on the second install.
         let tmp = TempDir::new().unwrap();
         let prefix = tmp.path();
         let linker = Linker::new(prefix).unwrap();
